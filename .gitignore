@@ -7,3 +7,6 @@
 /experiments/*/
 /fixed_data/
 /.vscode/
+/weights/
+/test_data/
+/output/

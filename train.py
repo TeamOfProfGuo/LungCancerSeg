@@ -1,18 +1,18 @@
-from dataset.dataset_lits_val import Val_Dataset
-from dataset.dataset_lits_train import Train_Dataset
+import os
+import config
+import numpy as np
+from tqdm import tqdm
+from collections import OrderedDict
 
-from torch.utils.data import DataLoader
 import torch
 import torch.optim as optim
-from tqdm import tqdm
-import config
+from torch.utils.data import DataLoader
 
+from dataset.dataset_lits_val import Val_Dataset
+from dataset.dataset_lits_train import Train_Dataset
 from models import UNet, ResUNet , KiUNet_min, SegNet
-
 from utils import logger, weights_init, metrics, common, loss
-import os
-import numpy as np
-from collections import OrderedDict
+
 
 def val(model, val_loader, loss_func, n_labels):
     model.eval()
@@ -31,6 +31,7 @@ def val(model, val_loader, loss_func, n_labels):
     val_log = OrderedDict({'Val_Loss': val_loss.avg, 'Val_dice_liver': val_dice.avg[1]})
     if n_labels==3: val_log.update({'Val_dice_tumor': val_dice.avg[2]})
     return val_log
+
 
 def train(model, train_loader, optimizer, loss_func, n_labels, alpha):
     print("=======Epoch:{}=======lr:{}".format(epoch,optimizer.state_dict()['param_groups'][0]['lr']))
@@ -60,6 +61,7 @@ def train(model, train_loader, optimizer, loss_func, n_labels, alpha):
     val_log = OrderedDict({'Train_Loss': train_loss.avg, 'Train_dice_liver': train_dice.avg[1]})
     if n_labels==3: val_log.update({'Train_dice_tumor': train_dice.avg[2]})
     return val_log
+
 
 if __name__ == '__main__':
     args = config.args

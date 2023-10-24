@@ -1,18 +1,22 @@
-from posixpath import join
-from torch.utils.data import DataLoader
 import os
 import sys
 import random
-from torchvision.transforms import RandomCrop
 import numpy as np
 import SimpleITK as sitk
+
+from config import args
+from posixpath import join
+
 import torch
+from torch.utils.data import DataLoader
+from torchvision.transforms import RandomCrop
 from torch.utils.data import Dataset as dataset
+
 from .transforms import RandomCrop, RandomFlip_LR, RandomFlip_UD, Center_Crop, Compose, Resize
+
 
 class Train_Dataset(dataset):
     def __init__(self, args):
-
         self.args = args
 
         self.filename_list = self.load_file_name_list(os.path.join(args.dataset_path, 'train_path_list.txt'))
@@ -25,7 +29,6 @@ class Train_Dataset(dataset):
             ])
 
     def __getitem__(self, index):
-
         ct = sitk.ReadImage(self.filename_list[index][0], sitk.sitkInt16)
         seg = sitk.ReadImage(self.filename_list[index][1], sitk.sitkUInt8)
 
@@ -56,9 +59,9 @@ class Train_Dataset(dataset):
                 file_name_list.append(lines.split())
         return file_name_list
 
+
 if __name__ == "__main__":
     sys.path.append('/ssd/lzq/3DUNet')
-    from config import args
     train_ds = Train_Dataset(args)
 
     # 定义数据加载
